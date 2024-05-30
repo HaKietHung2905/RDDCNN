@@ -31,7 +31,7 @@ args = parser.parse_args()
 batch_size = args.batch_size
 cuda = torch.cuda.is_available()
 n_epoch = args.epoch
-sigma = args.sigma
+#sigma = args.sigma
 
 
 class sum_squared_error(_Loss):
@@ -99,7 +99,7 @@ def main():
 
 
 if __name__ == "__main__":
-    save_dir = os.path.join('models', args.model + '_' + 'sigma' + str(sigma))
+    save_dir = os.path.join('models', args.model + '_' + 'sigma_realtrain')
     if not os.path.exists(save_dir):
         os.mkdir(save_dir)
     main()
