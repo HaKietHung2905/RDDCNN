@@ -92,7 +92,7 @@ def main():
         elapsed_time = time.time() - start_time
         scheduler.step(epoch)  # step to the learning rate in this epoch
 
-        utils.log('epcoh = %4d , loss = %4.4f , time = %4.2f s' % (epoch+1, epoch_loss/n_count, elapsed_time))
+        utils.log('epoch = %4d , loss = %4.4f , time = %4.2f s' % (epoch+1, epoch_loss/n_count, elapsed_time))
         np.savetxt('train_result.txt', np.hstack((epoch+1, epoch_loss/n_count, elapsed_time)), fmt='%2.4f')
         # torch.save(model.state_dict(), os.path.join(save_dir, 'model_%03d.pth' % (epoch+1)))
         torch.save(model, os.path.join(save_dir, 'model_%03d.pth' % (epoch+1)))
