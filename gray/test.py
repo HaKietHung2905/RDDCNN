@@ -16,7 +16,8 @@ from skimage.metrics import structural_similarity, peak_signal_noise_ratio
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--set_dir', default='data/', type=str, help='path of test dataset')
-    parser.add_argument('--set_names', default=['BSD68', 'Set12'], help='test dataset names')
+    parser.add_argument('--set_names', default=['BSD68'], help='test dataset names')
+    #parser.add_argument('--set_names', default=['BSD68', 'Set12'], help='test dataset names')
     #parser.add_argument('--set_names', default=['Set12'], help='test dataset names')
     parser.add_argument('--sigma', default=15, type=int, help='noise level')
     parser.add_argument('--model_dir', default='models/', help='directory of the model')
