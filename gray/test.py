@@ -11,7 +11,7 @@ from models_rddcnn import DnCNN
 from skimage.io import imread, imsave
 import time
 from skimage.metrics import structural_similarity, peak_signal_noise_ratio
-
+from PIL import Image
 
 def parse_args():
     parser = argparse.ArgumentParser()
@@ -26,14 +26,30 @@ def parse_args():
     parser.add_argument('--save_result', default=0, type=int, help='save the de-noised image, 1 or 0')
     return parser.parse_args()
 
-
 def save_result(result, path):
-    path = path if path.find('.') != -1 else path+'.png'
+    img = Image.fromarray(np.clip(result, 0, 1))
+    print(img.mode)
+    if img.mode != 'F':
+      path = path if path.find('.') != -1 else path+'.tiff'
+    else :
+      #path = path if path.find('.') != -1 else path+'.tiff' 
+      path = os.path.splitext(path)[0]+ ".tiff"  
     ext = os.path.splitext(path)[-1]
+    print (path)
+    
     if ext in ('.txt', '.dlm'):
-        np.savetxt(path, result, fmt='%2.4f')
+      np.savetxt(path, result, fmt='%2.4f')
     else:
-        imsave(path, np.clip(result, 0, 1))
+      img.save(path)
+
+# def save_result(result, path):
+#     path = path if path.find('.') != -1 else path+'.png'
+#     ext = os.path.splitext(path)[-1]
+#     if ext in ('.txt', '.dlm'):
+#         np.savetxt(path, result, fmt='%2.4f')
+#     else:
+#         imsave(path, np.clip(result, 0, 1))
+
 
 
 def show(x, title=None, cbar=False, figsize=None):
