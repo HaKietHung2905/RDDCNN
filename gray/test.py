@@ -108,8 +108,8 @@ def main():
                     if args.save_result:
                         name, ext = os.path.splitext(im)
                         show(np.hstack((y, x_)))  # show the image
-                        save_result(x_, path=os.path.join(args.result_dir, set_cur, '_' + args.mode, name+'_%.3f'% psnr_x_ +ext))  # save the denoised image
-                        save_result(y, path=os.path.join(args.result_dir, set_cur, '_' + args.mode, name +'_%.3f'% psnr_y_+ ext))
+                        save_result(x_, path=os.path.join(args.result_dir, set_cur+'_sigma'+ str(args.sigma)+'_' + args.mode, name+'_%.3f'% psnr_x_ +ext))  # save the denoised image
+                        save_result(y, path=os.path.join(args.result_dir, set_cur+'_sigma'+ str(args.sigma)+'_' + args.mode, name +'_%.3f'% psnr_y_+ ext))
                     psnrs.append(psnr_x_)
             psnr_avg = np.mean(psnrs)
             ans.append(psnr_avg)
