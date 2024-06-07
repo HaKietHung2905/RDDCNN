@@ -12,13 +12,12 @@ from skimage.io import imread, imsave
 import time
 from skimage.metrics import structural_similarity, peak_signal_noise_ratio
 from PIL import Image
+from skimage.color import rgb2gray 
 
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--set_dir', default='data/', type=str, help='path of test dataset')
-    #parser.add_argument('--set_names', default=['BSD68'], help='test dataset names')
-    #parser.add_argument('--set_names', default=['BSD68', 'Set12'], help='test dataset names')
-    parser.add_argument('--set_names', default=['Set12'], help='test dataset names')
+    parser.add_argument('--set_names', default=['BSD68', 'Set12'], help='test dataset names')
     parser.add_argument('--sigma', default=15, type=int, help='noise level')
     parser.add_argument('--model_dir', default='models/', help='directory of the model')
     parser.add_argument('--mode', default='S', type=str, help='the model name')
@@ -87,12 +86,13 @@ def main():
                 if im.endswith(".jpg") or im.endswith(".bmp") or im.endswith(".png"):
 
                     x = np.array(imread(os.path.join(args.set_dir, set_cur, im)), dtype=np.float32)/255.0
+                    if x.ndim == 3 and x.shape[2] == 3:  # Check if the image is RGB
+                        x = rgb2gray(x)  # Convert RGB to grayscale
                     np.random.seed(seed=8)  # for reproducibility
                     y = x + np.random.normal(0, args.sigma/255.0, x.shape)  # Add Gaussian noise without clipping
                     y = y.astype(np.float32)
                     start_time = time.time()
                     y_ = torch.from_numpy(y).view(1, -1, y.shape[0], y.shape[1])
-
                     torch.cuda.synchronize()
                     y_ = y_.cuda()
                     x_ = model(y_)  # inference
@@ -108,8 +108,8 @@ def main():
                     if args.save_result:
                         name, ext = os.path.splitext(im)
                         show(np.hstack((y, x_)))  # show the image
-                        save_result(x_, path=os.path.join(args.result_dir, set_cur, name+'_%.3f'% psnr_x_ +ext))  # save the denoised image
-                        save_result(y, path=os.path.join(args.result_dir, set_cur, name +'_%.3f'% psnr_y_+ ext))
+                        save_result(x_, path=os.path.join(args.result_dir, set_cur, '_' + args.mode, name+'_%.3f'% psnr_x_ +ext))  # save the denoised image
+                        save_result(y, path=os.path.join(args.result_dir, set_cur, '_' + args.mode, name +'_%.3f'% psnr_y_+ ext))
                     psnrs.append(psnr_x_)
             psnr_avg = np.mean(psnrs)
             ans.append(psnr_avg)
