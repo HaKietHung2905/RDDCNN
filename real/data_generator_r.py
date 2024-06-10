@@ -89,7 +89,7 @@ def gen_patches(file_name):
 
 def datagenerator(data_dir='data/RealTrain', verbose=False):
     file_list = glob.glob(data_dir + '/*')
-    # print('file_list', len(file_list))
+    print('file_list', len(file_list))
     h5f_real = h5py.File('data_real.h5', 'w')
     h5f_label = h5py.File('data_label.h5', 'w')
     for i in range(len(file_list)):
